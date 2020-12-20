@@ -15,9 +15,9 @@ class gameObject:
             cls._instance = cls(dataframe)
         return cls._instance
 
-    def duplicidade (self):
-        ds = self.dataset.drop_duplicates()
-        return ds
+    def time_l(self):
+        timeesquerda = self.dataset.iloc[[0],[2]]
+        return timeesquerda
 
     def zonadogol_l(self):
         nzonadogol = self.dataset[self.dataset['ball_x'] > 36.00].shape[0]
@@ -28,7 +28,7 @@ class gameObject:
         return ngols
 
     def golsoponente_l(self):
-        ngols = self.dataset[self.dataset['playmode'] == 'goal_r'].shape[0]
+        ngols = self.dataset[self.dataset['playmode'] == 'goal_r']
         return ngols
 
     def escanteio_l(self):
@@ -45,7 +45,8 @@ class gameObject:
     
     def player_x_l(self):
         nplayer_x = self.dataset.iloc[:,[18,49,80,111,142,173,204,235,266,297,328]]
-        return nplayer_x
+        cplayer_x = nplayer_x.columns
+        return cplayer_x
 
     def stamina_l(self):
         nstamina = self.dataset.iloc[:,[1,28,59,90,121,152,183,214,245,276,307,338]]
@@ -64,7 +65,7 @@ class gameObject:
         return ngols
 
     def golsoponente_r(self):
-        ngols = self.dataset[self.dataset['playmode'] == 'goal_l'].shape[0]
+        ngols = self.dataset[self.dataset['playmode'] == 'goal_l']
         return ngols
 
     def escanteio_r(self):
@@ -81,7 +82,8 @@ class gameObject:
     
     def player_x_r(self):
         nplayer_x = self.dataset.iloc[:,[359,390,421,452,483,514,545,576,607,638,669]]
-        return nplayer_x
+        cplayer_x = nplayer_x.columns
+        return cplayer_x
 
     def stamina_r(self):
         nstamina = self.dataset.iloc[:,[1,369,400,431,462,493,524,555,586,617,648,679]]
@@ -92,9 +94,8 @@ class gameObject:
         return nplayer_xy
 
 
-#funções
-def definicaodosatacantes_l (player_x,jogadoresrc):
-    playerxcnames = player_x.columns
+#funções de definição
+def definicaodosatacantes_l (playerxcnames,jogadoresrc):
     atacantes = []
     index = 0
     atacantesid = [0]
@@ -103,9 +104,9 @@ def definicaodosatacantes_l (player_x,jogadoresrc):
         if jogadoresrc[jogadoresrc[str(column)] > 26].shape[0] > jogadoresrc[jogadoresrc[str(column)] < -26].shape[0]:
             atacantes.append(column)
             atacantesid.append(index)
+    return atacantes, atacantesid
 
-def definicaodosatacantes_r (player_x,jogadoresrc):
-    playerxcnames = player_x.columns
+def definicaodosatacantes_r (playerxcnames,jogadoresrc):
     atacantes = []
     index = 0
     atacantesid = [0]
@@ -174,13 +175,13 @@ def jogadasofensivas_xy_l (player_xy,atacantes,goal_oponente):
     for i in range(2,len(pgcolunas),2):
         posicoes_gol[pgcolunas[i]] = posicoes_gol[pgcolunas[i]]*-1
 
-    def apagaduplicados(dataframe):
+    def apagaduplicados(tabela):
         aux = 0
-        for i in dataframe.index:
+        for i in tabela.index:
             if i == aux+1:
-                dataframe = dataframe.drop([i],axis=0)
+                tabela = tabela.drop([i],axis=0)
             aux = i
-        return dataframe
+        return tabela
 
     posicoes_goltime = apagaduplicados(posicoes_gol)
     posicoes_goltime = posicoes_goltime.drop('playmode',axis=1)
@@ -217,36 +218,60 @@ def jogadasofensivas_xy_r (player_xy,atacantes,goal_oponente):
     posicoesgol_y = posicoes_goltime.iloc[:,list(range(1,len(posicoes_goltime.columns),2))]
     return posicoesgol_x,posicoesgol_y,posicoesgoloponente, posicoes_goltime
 
+
+#funções de plotagem
 def graficostamina(stamina_players,atacantesid,posicoes_goltime,posicoesgoloponente):
     stamina_atacantes = stamina_players.iloc[:,atacantesid]
     graficosstamina = stamina_atacantes.plot(figsize=(13, 8), subplots=True)
-    for axes in graficosstamina:
-        axes.plot([posicoes_goltime.index,posicoes_goltime.index], [0, 8000], color="black")
-        axes.plot([posicoesgoloponente.index,posicoesgoloponente.index], [0, 8000], color="red")
+    if posicoes_goltime.shape[0] != 0:
+        for axes in graficosstamina:
+            axes.plot([posicoes_goltime.index,posicoes_goltime.index], [0, 8000], color="black")
+    if posicoesgoloponente.shape[0] != 0:
+        for axes in graficosstamina:
+            axes.plot([posicoesgoloponente.index,posicoesgoloponente.index], [0, 8000], color="red")
     plt.xlabel('Tempo de Jogo')
     plt.ylabel('Valor do atributo Stamina')
     plt.savefig('staminadosjogadores.png')
+    plt.cla()
 
 
 def graficostempoofensivo(tempoofensivo,temponaoofensivo,tempototal):
     seriesofensive = pd.Series([tempoofensivo,temponaoofensivo],index=['Tempo ofensivo','Tempo não ofensivo'], name='Período do Jogo')
-    seriesofensive.plot.pie(colors=['#038d05', '#117401', '#005813', '#00400e'],figsize=(10, 6))
+    seriesofensive.plot.pie(colors=['#038d05', '#117401', '#005813', '#00400e'],figsize=(10, 8))
     plt.title('Tempo ofensivo e tempo não ofensivo em lances com a bola no campo adversário')
     plt.savefig('tempoofensivozonadeataque.png')
     plt.cla()
     seriestempototal = pd.Series([tempototal,tempoofensivo],index=['Tempo não ofensivo', 'Tempo ofensivo'],name='Período do Jogo')
-    seriestempototal.plot.pie(colors=['#038d05', '#117401', '#005813', '#00400e'],figsize=(6, 6))
+    seriestempototal.plot.pie(colors=['#038d05', '#117401', '#005813', '#00400e'],figsize=(10, 8))
     plt.title('Tempo ofensivo em relação ao tempo total de jogo')
     plt.savefig('tempoofensivoxtotal.png')
     plt.cla()
 
+
 def graficofinalizacoes (zonadogol, escanteio, prafora, gols):
-    finalizacoes = pd.Series([zonadogol,escanteio,prafora,gols],index=['Linha do Ataque','Escanteio','Chute para fora','Gols'],name='Lances')
-    finalizacoes.plot.pie(colors=['#038d05', '#117401', '#005813', '#00400e'],figsize=(6, 6))
+    listalances = [zonadogol]
+    nomes = ['Linha do Ataque']
+    cores = ['#038d05']
+    if gols != 0:
+        listalances.append(gols)
+        nomes.append('Gols')
+        cores.append('#117401')
+    if escanteio != 0:
+        listalances.append(escanteio)
+        nomes.append('Escanteio')
+        cores.append('#005813')
+    if prafora != 0:
+        listalances.append(prafora)
+        nomes.append('Chute para linha de fundo')
+        cores.append('#00400e')
+    finalizacoes = pd.Series(listalances,index=nomes,name='Lances')
+    finalizacoes.plot.pie(colors=cores,figsize=(8, 8))
     plt.title('Finalizações e lances na linha do ataque')
     plt.savefig('finalizações.png')
     plt.cla()
 
+
+    
 def graficosposicaodegol (posicoesgol_x,posicoesgol_y):
     for i in range(len(posicoesgol_x.index)):
         plt.scatter(x=posicoesgol_x.iloc[i],y=posicoesgol_y.iloc[i],color=['red', 'green','green','green','green','green'])

@@ -16,8 +16,20 @@ if (timeesquerda == 'RoboCIn').bool():
 
 
     #grafico finalizações
-    finalizacoes = pd.Series([zonadogol,escanteio,prafora,gols],index=['Linha do Ataque','Escanteio','Chute para fora','Gols'],name='Lances')
-    finalizacoes.plot.pie(colors=['#038d05', '#117401', '#005813', '#00400e'],figsize=(6, 6))
+    listalances = [zonadogol]
+    nomes = ['Linha do Ataque']
+    if gols != 0:
+        listalances.append(gols)
+        nomes.append('Gols')
+    if escanteio != 0:
+        listalances.append(escanteio)
+        nomes.append('Escanteio')
+    if prafora != 0:
+        listalances.append(prafora)
+        nomes.append('Chute para fora')
+    cores = ['#038d05', '#117401', '#005813', '#00400e']
+    finalizacoes = pd.Series(listalances,index=nomes,name='Lances')
+    finalizacoes.plot.pie(colors=cores[:len(listalances)],figsize=(6, 6))
     plt.title('Finalizações e lances na linha do ataque')
     plt.savefig('finalizações.png')
     plt.cla()
@@ -65,6 +77,7 @@ if (timeesquerda == 'RoboCIn').bool():
     playersofensivos['ofensive'] = playersofensivos.apply(jogadaofensiva,axis=1)
     tempoofensivo = playersofensivos[playersofensivos['ofensive'] == True].shape[0]
     temponaoofensivo = playersofensivos[playersofensivos['ofensive'] == False].shape[0]
+    tempototal = dataset['show_time'].shape[0] - tempoofensivo
 
 
     #graficos tempo ofensivo
@@ -73,7 +86,6 @@ if (timeesquerda == 'RoboCIn').bool():
     plt.title('Tempo ofensivo e tempo não ofensivo em lances com a bola no campo adversário')
     plt.savefig('tempoofensivozonadeataque.png')
     plt.cla()
-    tempototal = dataset['show_time'].shape[0] - tempoofensivo
     seriestempototal = pd.Series([tempototal,tempoofensivo],index=['Tempo não ofensivo', 'Tempo ofensivo'],name='Período do Jogo')
     seriestempototal.plot.pie(colors=['#038d05', '#117401', '#005813', '#00400e'],figsize=(6, 6))
     plt.title('Tempo ofensivo em relação ao tempo total de jogo')
@@ -91,7 +103,6 @@ if (timeesquerda == 'RoboCIn').bool():
     atacantes_xy = player_xy.iloc[:,lista_atcxy]
     posicoes_gol = atacantes_xy[atacantes_xy['playmode']=='goal_l']
     pgcolunas = posicoes_gol.columns
-    print(pgcolunas)
     for i in range(2,len(pgcolunas),2):
         posicoes_gol[pgcolunas[i]] = posicoes_gol[pgcolunas[i]]*-1
 
@@ -123,9 +134,12 @@ if (timeesquerda == 'RoboCIn').bool():
 
     #grafico stamina
     graficosstamina = stamina_atacantes.plot(figsize=(13, 8), subplots=True)
-    for axes in graficosstamina:
-        axes.plot([posicoes_gollimpa.index,posicoes_gollimpa.index], [0, 8000], color="black")
-        axes.plot([posicoesgoloponente.index,posicoesgoloponente.index], [0, 8000], color="red")
+    if posicoes_gollimpa.shape[0] != 0:
+        for axes in graficosstamina:
+            axes.plot([posicoes_gollimpa.index,posicoes_gollimpa.index], [0, 8000], color="black")
+    if posicoesgoloponente.shape[0] != 0:
+        for axes in graficosstamina:
+            axes.plot([posicoesgoloponente.index,posicoesgoloponente.index], [0, 8000], color="red")
     plt.xlabel('Tempo de Jogo')
     plt.ylabel('Valor do atributo Stamina')
     plt.savefig('staminadosjogadores.png')

@@ -19,7 +19,7 @@ if (timeesquerda == 'RoboCIn').bool():
     finalizacoes = pd.Series([zonadogol,escanteio,prafora,gols],index=['Linha do Ataque','Escanteio','Chute para fora','Gols'],name='Lances')
     finalizacoes.plot.pie(colors=['#038d05', '#117401', '#005813', '#00400e'],figsize=(6, 6))
     plt.title('Finalizações e lances na linha do ataque')
-    #plt.savefig('finalizações.png')
+    plt.savefig('finalizações.png')
     plt.cla()
 
 
@@ -71,13 +71,13 @@ if (timeesquerda == 'RoboCIn').bool():
     seriesofensive = pd.Series([tempoofensivo,temponaoofensivo],index=['Tempo ofensivo','Tempo não ofensivo'], name='Período do Jogo')
     seriesofensive.plot.pie(colors=['#038d05', '#117401', '#005813', '#00400e'],figsize=(10, 6))
     plt.title('Tempo ofensivo e tempo não ofensivo em lances com a bola no campo adversário')
-    #plt.savefig('tempoofensivozonadeataque.png')
+    plt.savefig('tempoofensivozonadeataque.png')
     plt.cla()
     tempototal = dataset['show_time'].shape[0] - tempoofensivo
     seriestempototal = pd.Series([tempototal,tempoofensivo],index=['Tempo não ofensivo', 'Tempo ofensivo'],name='Período do Jogo')
     seriestempototal.plot.pie(colors=['#038d05', '#117401', '#005813', '#00400e'],figsize=(6, 6))
     plt.title('Tempo ofensivo em relação ao tempo total de jogo')
-    #plt.savefig('tempoofensivoxtotal.png')
+    plt.savefig('tempoofensivoxtotal.png')
     plt.cla()
 
     #posições de jogada ofensiva
@@ -117,7 +117,7 @@ if (timeesquerda == 'RoboCIn').bool():
         plt.title('Posição dos atacantes e da bola no lance do Gol')
         plt.xlabel('Coordenadas x do campo')
         plt.ylabel('Coordenadas y do campo')
-        #plt.savefig('posiçãodegol'+ str(i)+'.png')
+        plt.savefig('posiçãodegol'+ str(i)+'.png')
         plt.cla()
 
 
@@ -128,7 +128,7 @@ if (timeesquerda == 'RoboCIn').bool():
         axes.plot([posicoesgoloponente.index,posicoesgoloponente.index], [0, 8000], color="red")
     plt.xlabel('Tempo de Jogo')
     plt.ylabel('Valor do atributo Stamina')
-    #plt.savefig('staminadosjogadores.png')
+    plt.savefig('staminadosjogadores.png')
 
 else:
     #organização dos dados por interesse

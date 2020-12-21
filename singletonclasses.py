@@ -1,101 +1,233 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-
+#singleton
 class gameObject:
 
     _instance = None
 
-    def __init__(self,dataframe):
-        self.dataset = dataframe
+    def __init__(self):
+        self.time_l = None
+        self.zonadogol_l = None
+        self.gols_l = None
+        self.golsoponente_l = None
+        self.escanteio_l = None
+        self.prafora_l = None
+        self.jogadores_l = None
+        self.player_x_l = None
+        self.stamina_l = None
+        self.player_xy_l = None
+        self.zonadogol_r = None
+        self.gols_r = None
+        self.golsoponente_r = None
+        self.escanteio_r = None
+        self.prafora_r = None
+        self.jogadores_r = None
+        self.player_x_r = None
+        self.stamina_r = None
+        self.player_xy_r = None
+    
+    def set_time_l(self,time):
+        self.time_l = time
+
+    def get_time_l(self):
+        return self.time_l
+
+    def set_zonadogol_l(self,zonadogol):
+        self.zonadogol_l = zonadogol
+
+    def get_zonadogol_l(self):
+        return self.zonadogol_l
+
+    def set_gols_l(self,gols):
+        self.gols_l = gols
+
+    def get_gols_l(self):
+        return self.gols_l
+
+    def set_golsoponente_l(self,golsoponente):
+        self.golsoponente_l = golsoponente
+        
+    def get_golsoponente_l(self):
+        return self.golsoponente_l
+
+    def set_escanteio_l(self,escanteio):
+        self.escanteio_l = escanteio
+        
+    def get_escanteio_l(self):
+        return self.escanteio_l
+
+    def set_prafora_l(self,prafora):
+        self.prafora_l = prafora
+        
+    def get_prafora_l(self):
+        return self.prafora_l
+
+    def set_jogadores_l(self,jogadores):
+        self.jogadores_l = jogadores
+        
+    def get_jogadores_l(self):
+        return self.jogadores_l
+
+    def set_player_x_l(self,player_x):
+        self.player_x_l = player_x
+        
+    def get_player_x_l(self):
+        return self.player_x_l
+
+    def set_stamina_l(self,stamina):
+        self.stamina_l = stamina
+        
+    def get_stamina_l(self):
+        return self.stamina_l
+
+    def set_player_xy_l(self,player_xy):
+        self.player_xy_l = player_xy
+        
+    def get_player_xy_l(self):
+        return self.player_xy_l
+
+    def set_zonadogol_r(self,zonadogol):
+        self.zonadogol_r = zonadogol
+
+    def get_zonadogol_r(self):
+        return self.zonadogol_r
+
+    def set_gols_r(self,gols):
+        self.gols_r = gols
+
+    def get_gols_r(self):
+        return self.gols_r
+
+    def set_golsoponente_r(self,golsoponente):
+        self.golsoponente_r = golsoponente
+        
+    def get_golsoponente_r(self):
+        return self.golsoponente_r
+
+    def set_escanteio_r(self,escanteio):
+        self.escanteio_r = escanteio
+        
+    def get_escanteio_r(self):
+        return self.escanteio_r
+
+    def set_prafora_r(self,prafora):
+        self.prafora_r = prafora
+        
+    def get_prafora_r(self):
+        return self.prafora_r
+
+    def set_jogadores_r(self,jogadores):
+        self.jogadores_r = jogadores
+        
+    def get_jogadores_r(self):
+        return self.jogadores_r
+
+    def set_player_x_r(self,player_x):
+        self.player_x_r = player_x
+        
+    def get_player_x_r(self):
+        return self.player_x_r
+
+    def set_stamina_r(self,stamina):
+        self.stamina_r = stamina
+        
+    def get_stamina_r(self):
+        return self.stamina_r
+
+    def set_player_xy_r(self,player_xy):
+        self.player_xy_r = player_xy
+        
+    def get_player_xy_r(self):
+        return self.player_xy_r
 
     @classmethod
-    def instance(cls,dataframe):
+    def instance(cls):
         if cls._instance is None:
-            cls._instance = cls(dataframe)
+            cls._instance = cls()
         return cls._instance
 
-    def time_l(self):
-        timeesquerda = self.dataset.iloc[[0],[2]]
-        return timeesquerda
+#subclasses
+class time_l:
+    def __init__(self, dataframe):
+        self.ntime = dataframe.iloc[[0],[2]]
+        
+class zonadogol_l:
+    def __init__(self, dataframe):
+        self.nzonadogol = dataframe[dataframe['ball_x'] > 36.00].shape[0]
 
-    def zonadogol_l(self):
-        nzonadogol = self.dataset[self.dataset['ball_x'] > 36.00].shape[0]
-        return nzonadogol
+class gols_l:
+    def __init__(self, dataframe):
+        self.ngols = dataframe[dataframe['playmode'] == 'goal_l'].shape[0]
 
-    def gols_l(self):
-        ngols = self.dataset[self.dataset['playmode'] == 'goal_l'].shape[0]
-        return ngols
+class golsoponente_l:
+    def __init__(self, dataframe):
+        self.ngols = dataframe[dataframe['playmode'] == 'goal_r']
 
-    def golsoponente_l(self):
-        ngols = self.dataset[self.dataset['playmode'] == 'goal_r']
-        return ngols
+class escanteio_l:
+    def __init__(self, dataframe):
+        self.nescanteio = dataframe[dataframe['playmode'] == 'corner_kick_l'].shape[0]
 
-    def escanteio_l(self):
-        nescanteio = self.dataset[self.dataset['playmode'] == 'corner_kick_l'].shape[0]
-        return nescanteio
+class prafora_l:
+    def __init__(self, dataframe):
+        self.nprafora = dataframe[dataframe['playmode'] == 'goal_kick_l'].shape[0]
 
-    def prafora_l(self):
-        nprafora = self.dataset[self.dataset['playmode'] == 'goal_kick_l'].shape[0]
-        return nprafora
-
-    def jogadores_l(self):
-        njogadores = self.dataset.iloc[:,[0,1,10,11,18,19,28,34,49,50,59,65,80,81,90,96,111,112,121,127,142,143,152,158,173,174,183,189,204,205,214,220,235,236,245,251,266,267,276,282,297,298,307,313,328,329,338,344]]
-        return njogadores
+class jogadores_l:
+    def __init__(self, dataframe):
+        self.njogadores = dataframe.iloc[:,[0,1,10,11,18,19,28,34,49,50,59,65,80,81,90,96,111,112,121,127,142,143,152,158,173,174,183,189,204,205,214,220,235,236,245,251,266,267,276,282,297,298,307,313,328,329,338,344]]
     
-    def player_x_l(self):
-        nplayer_x = self.dataset.iloc[:,[18,49,80,111,142,173,204,235,266,297,328]]
-        cplayer_x = nplayer_x.columns
-        return cplayer_x
+class player_x_l:
+    def __init__(self, dataframe):
+        self.nplayer_x = dataframe.iloc[:,[18,49,80,111,142,173,204,235,266,297,328]]
 
-    def stamina_l(self):
-        nstamina = self.dataset.iloc[:,[1,28,59,90,121,152,183,214,245,276,307,338]]
-        return nstamina
+class stamina_l:
+    def __init__(self, dataframe):
+        self.nstamina = dataframe.iloc[:,[1,28,59,90,121,152,183,214,245,276,307,338]]
 
-    def player_xy_l(self):
-        nplayer_xy = self.dataset.iloc[:,[1,10,11,18,19,49,50,80,81,111,112,142,143,173,174,204,205,235,236,266,267,297,298,328,329]]
-        return nplayer_xy
+class player_xy_l:
+    def __init__(self, dataframe):
+        self.nplayer_xy = dataframe.iloc[:,[1,10,11,18,19,49,50,80,81,111,112,142,143,173,174,204,205,235,236,266,267,297,298,328,329]]
 
-    def zonadogol_r(self):
-        nzonadogol = self.dataset[self.dataset['ball_x'] > -36.00].shape[0]
-        return nzonadogol
+class zonadogol_r:
+    def __init__(self, dataframe):
+        self.nzonadogol = dataframe[dataframe['ball_x'] > -36.00].shape[0]
 
-    def gols_r(self):
-        ngols = self.dataset[self.dataset['playmode'] == 'goal_r'].shape[0]
-        return ngols
+class gols_r:
+    def __init__(self, dataframe):
+        self.ngols = dataframe[dataframe['playmode'] == 'goal_r'].shape[0]
 
-    def golsoponente_r(self):
-        ngols = self.dataset[self.dataset['playmode'] == 'goal_l']
-        return ngols
+class golsoponente_r:
+    def __init__(self, dataframe):
+        self.ngols = dataframe[dataframe['playmode'] == 'goal_l']
 
-    def escanteio_r(self):
-        nescanteio = self.dataset[self.dataset['playmode'] == 'corner_kick_r'].shape[0]
-        return nescanteio
+class escanteio_r:
+    def __init__(self, dataframe):
+        self.nescanteio = dataframe[dataframe['playmode'] == 'corner_kick_r'].shape[0]
 
-    def prafora_r(self):
-        nprafora = self.dataset[self.dataset['playmode'] == 'goal_kick_r'].shape[0]
-        return nprafora
+class prafora_r:
+    def __init__(self, dataframe):
+        self.nprafora = dataframe[dataframe['playmode'] == 'goal_kick_r'].shape[0]
 
-    def jogadores_r(self):
-        njogadores = self.dataset.iloc[:,[0,1,10,11,359,360,369,375,390,391,400,406,421,422,431,437,452,453,462,468,483,484,493,499,514,515,524,530,545,546,555,561,576,577,586,592,607,608,617,623,638,639,648,654,669,670,679,685]]
-        return njogadores
+class jogadores_r:
+    def __init__(self, dataframe):
+        self.njogadores = dataframe.iloc[:,[0,1,10,11,359,360,369,375,390,391,400,406,421,422,431,437,452,453,462,468,483,484,493,499,514,515,524,530,545,546,555,561,576,577,586,592,607,608,617,623,638,639,648,654,669,670,679,685]]
     
-    def player_x_r(self):
-        nplayer_x = self.dataset.iloc[:,[359,390,421,452,483,514,545,576,607,638,669]]
-        cplayer_x = nplayer_x.columns
-        return cplayer_x
+class player_x_r:
+    def __init__(self, dataframe):
+        self.nplayer_x = dataframe.iloc[:,[359,390,421,452,483,514,545,576,607,638,669]]
 
-    def stamina_r(self):
-        nstamina = self.dataset.iloc[:,[1,369,400,431,462,493,524,555,586,617,648,679]]
-        return nstamina
+class stamina_r:
+    def __init__(self, dataframe):
+        self.nstamina = dataframe.iloc[:,[1,369,400,431,462,493,524,555,586,617,648,679]]
 
-    def player_xy_r(self):
-        nplayer_xy = self.dataset.iloc[:,[1,10,11,359,360,390,391,421,422,452,453,483,484,514,515,545,546,576,577,607,608,638,639,669,670]]
-        return nplayer_xy
+class player_xy_r:
+    def __init__(self, dataframe):
+        self.nplayer_xy = dataframe.iloc[:,[1,10,11,359,360,390,391,421,422,452,453,483,484,514,515,545,546,576,577,607,608,638,639,669,670]]
 
 
 #funções de definição
-def definicaodosatacantes_l (playerxcnames,jogadoresrc):
+def definicaodosatacantes_l (player_x,jogadoresrc):
+    playerxcnames = player_x.columns
     atacantes = []
     index = 0
     atacantesid = [0]
@@ -106,7 +238,8 @@ def definicaodosatacantes_l (playerxcnames,jogadoresrc):
             atacantesid.append(index)
     return atacantes, atacantesid
 
-def definicaodosatacantes_r (playerxcnames,jogadoresrc):
+def definicaodosatacantes_r (player_x,jogadoresrc):
+    playerxcnames = player_x.columns
     atacantes = []
     index = 0
     atacantesid = [0]
@@ -265,16 +398,18 @@ def graficofinalizacoes (zonadogol, escanteio, prafora, gols):
         nomes.append('Chute para linha de fundo')
         cores.append('#00400e')
     finalizacoes = pd.Series(listalances,index=nomes,name='Lances')
-    finalizacoes.plot.pie(colors=cores,figsize=(8, 8))
+    finalizacoes.plot.pie(colors=cores,figsize=(12, 8))
     plt.title('Finalizações e lances na linha do ataque')
     plt.savefig('finalizações.png')
     plt.cla()
 
-
     
 def graficosposicaodegol (posicoesgol_x,posicoesgol_y):
+    cores = ['red']
+    for i in range(len(posicoesgol_x.columns)-1):
+        cores.append('green')
     for i in range(len(posicoesgol_x.index)):
-        plt.scatter(x=posicoesgol_x.iloc[i],y=posicoesgol_y.iloc[i],color=['red', 'green','green','green','green','green'])
+        plt.scatter(x=posicoesgol_x.iloc[i],y=posicoesgol_y.iloc[i],color=cores)
         plt.axis([-56, 56, -35, 35])
         plt.title('Posição dos atacantes e da bola no lance do Gol')
         plt.xlabel('Coordenadas x do campo')

@@ -190,7 +190,7 @@ class player_xy_l:
 
 class zonadogol_r:
     def __init__(self, dataframe):
-        self.nzonadogol = dataframe[dataframe['ball_x'] > -36.00].shape[0]
+        self.nzonadogol = dataframe[dataframe['ball_x'] < -36.00].shape[0]
 
 class gols_r:
     def __init__(self, dataframe):
@@ -245,7 +245,7 @@ def definicaodosatacantes_r (player_x,jogadoresrc):
     atacantesid = [0]
     for column in playerxcnames:
         index +=1
-        if jogadoresrc[jogadoresrc[str(column)] > -26].shape[0] > jogadoresrc[jogadoresrc[str(column)] < 26].shape[0]:
+        if jogadoresrc[jogadoresrc[str(column)] < -26].shape[0] > jogadoresrc[jogadoresrc[str(column)] > 26].shape[0]:
             atacantes.append(column)
             atacantesid.append(index)
     return atacantes, atacantesid
@@ -275,13 +275,13 @@ def datatempoofensivo_l(atacantes,dataset):
 def datatempoofensivo_r(atacantes,dataset):
     atacantes.append('ball_x')
     atacantestable = dataset.loc[:,atacantes]
-    bolazonf = atacantestable[atacantestable['ball_x'] > -26.00]
+    bolazonf = atacantestable[atacantestable['ball_x'] < -26.00]
     playersofensivos = bolazonf.drop('ball_x', axis=1)
 
     def jogadaofensiva (linha):
         count = 0
         for celula in linha:
-            if celula > -26:
+            if celula < -26:
                 count += 1
         if count >= 3:
             return True
